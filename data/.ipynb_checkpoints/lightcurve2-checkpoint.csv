@@ -1,0 +1,8 @@
+﻿"# ExoFOP-TESS Time Series Observations Thu Sep 11 17:03:22 2025"
+"# Filter parameters: Filter contains lightcurve"
+
+
+"TIC ID","Name","TOI","Telescope","Camera","Filter","Pixel scale (arcsec)","Estimated PSF (arcsec)","Photometric Aperture Radius (pixel)","Transit coverage","Faintest Neighbor delta mag","Observation date (UT)","Observation duration (m)","Number of Observations","Observation type","Notes","User","Group","Tag"
+"4711","TIC 4711.01","TOI 3129.01","Brierfield0.36m (0.36 m)","Moravion16803","lightcurve","1.47","4.58","6","Full","5.74","2022-05-06","593","342","Continuous","","radford","tfopwg","415610"
+"320411045","TIC 320411045.01","TOI 6448.01","LCO-SAAO-0m35-gp (0.35 m)","QHY600","compstar-lightcurves","0.73","2.43","9","Full","","2024-12-09","276","81","Continuous","","schwarz","tfopwg","445089"
+"426319499","TIC 426319499.01","TOI 3772.01","LCO-HAL-0m35-ip (0.35 m)","QHY600","compstar-lightcurves","0.73","2.92","12","Full","","2024-12-01","256","51","Continuous","","schwarz","tfopwg","444881"
