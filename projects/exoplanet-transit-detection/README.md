@@ -14,6 +14,8 @@ The project uses light curve data from:
 
 Data is stored in FITS format containing time series brightness measurements.
 
+> **Note:** This project now supports both `PDCSAP_FLUX` and `FLUX` column naming conventions, allowing it to work with a wider range of data sources without modification.
+
 ## Approach
 
 1. **Data Processing**: Clean light curve data by removing NaN values and normalizing flux values
@@ -63,6 +65,33 @@ python src/data/make_dataset.py
 ```
 python src/models/train_model.py
 ```
+
+## Handling Different Flux Columns
+
+Some FITS files use the column name `PDCSAP_FLUX` while others use just `FLUX`. This project now supports both formats:
+
+```python
+# Using the flexible loading function
+from shared.data_utils import load_flux_from_fits
+
+time, flux, quality, flux_column_used = load_flux_from_fits(
+    file_path, 
+    flux_columns=['PDCSAP_FLUX', 'FLUX', 'SAP_FLUX']
+)
+
+# Or the combined processing function
+from projects.exoplanet_transit_detection.src.feature_extraction import process_fits_files
+
+features, labels, sources, stats = process_fits_files(
+    "../data/**/*.fits",
+    flux_columns=['PDCSAP_FLUX', 'FLUX']
+)
+```
+
+Key benefits:
+- Increased data compatibility (works with both Kepler and TESS formats)
+- More robust error handling
+- Consistent preprocessing across different data sources
 
 ## Results
 

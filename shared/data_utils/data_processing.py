@@ -4,9 +4,13 @@ Common data processing utilities for all projects.
 
 import numpy as np
 import pandas as pd
+import glob
 from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
 from sklearn.impute import SimpleImputer, KNNImputer
 from sklearn.model_selection import train_test_split
+
+# Import the fits_loader functions
+from .fits_loader import load_flux_from_fits, normalize_flux, get_fits_header_info
 
 def load_csv_data(file_path, **kwargs):
     """
@@ -129,3 +133,46 @@ def check_class_balance(y):
         'imbalance_ratio': imbalance_ratio,
         'is_balanced': imbalance_ratio < 2  # Rule of thumb for "balanced"
     }
+
+def load_all_fits_files(directory_pattern, flux_columns=['PDCSAP_FLUX', 'FLUX', 'SAP_FLUX']):
+    """
+    Load all FITS files in the specified directory pattern, handling different flux column names.
+    
+    Args:
+        directory_pattern (str): Glob pattern to match FITS files (e.g., "../data/**/*.fits")
+        flux_columns (list): List of flux column names to try, in order of preference
+        
+    Returns:
+        dict: Dictionary of successfully loaded light curves with metadata
+    """
+    light_curves = {}
+    successful_files = 0
+    error_files = 0
+    
+    for path in glob.glob(directory_pattern, recursive=True):
+        try:
+            time, flux, quality, flux_column_used = load_flux_from_fits(path, flux_columns)
+            
+            if time is not None and flux is not None:
+                # Get metadata
+                header_info = get_fits_header_info(path)
+                
+                # Store the data
+                light_curves[path] = {
+                    'time': time,
+                    'flux': flux,
+                    'flux_norm': normalize_flux(flux),
+                    'quality': quality,
+                    'flux_column_used': flux_column_used,
+                    'metadata': header_info
+                }
+                successful_files += 1
+            else:
+                error_files += 1
+                
+        except Exception:
+            error_files += 1
+            continue
+    
+    print(f"Processed FITS files: {successful_files} successful, {error_files} with errors")
+    return light_curves
